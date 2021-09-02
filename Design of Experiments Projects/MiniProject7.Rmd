@@ -1,0 +1,54 @@
+---
+title: "Mini Project 7"
+author: "Kristina White"
+date: "4/27/2021"
+output: pdf_document
+---
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+library(tidyverse)
+cookies <- read_csv("Cookies.csv")
+
+```
+
+For this experiment to see how to speed up the process of making cookies without sacrificing quality, homogeneous dough was split into 6 large batches.  Each batch was split into 12 equally weighted balls of dough spaced out evenly on a baking sheet.  Each batch was baked in one of 6 ovens (there were more available).  3 of these ovens were randomly assigned to bake cookies at 350 degrees, and 3 at 375 degrees.  After 11 minutes, 6 cookies were randomly selected to be removed from the baking sheet, and the other 6 were removed after 12 minutes. The taste-testers were asked to rate taste, color, and texture on a scale of 1 to 10, with 1 beign the worst and 10 being the best, and these ratings were added together to for one overall rating for the qaulity of the cookies.  
+
+This experimental design is considered a split-plot design with one whole plot factor and one split plot factor.  The whole plot is the larger experimental unit that we apply are first treatment to.  In this case, the whole plot was the oven/cookie sheet for that oven, and the whole plot factor, or the treatment applied, was temperature.  The split plot is the smaller experimental unit that "splits" the whole plot.  In this case the two groups of 6 cookies in each oven were the split plots.  The split plot factor, or the treatment applied to each group of 6 cookies was the baking time.  A diagram of the experimental design is shown below.
+
+![Split Plot Experimental Design]("C:/Users/klwhi/OneDrive/Pictures/Saved Pictures/splitplot.jpg")
+
+
+
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+cookies$Oven <- as.factor(cookies$Oven)
+cookies$Temperature <- as.factor(cookies$Temperature)
+cookies$Time <- as.factor(cookies$Time)
+
+model1 <- aov(Rating ~ Temperature*Time + Error(Oven), data = cookies)
+summary(model1)
+```
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+coefficients(model1)
+
+```
+
+
+
+
+After running analysis on the data, temperature did not turn out to be significant, but baking time is significant (p-value of 0.00197 for a significance level of 0.05).  Therefore, whichever baking temperature is more efficient may be used, but the cookies should be baked for 12 minutes to maintain quality.  The histogram below shows how many cookies received each rating by baking time, and cookies baked for 12 minutes do tend to have higher ratings.  Looking at the model coefficient for Time12 minutes, the coefficient is positive, suggesting that the 12-minute baking time has a positive impact on rating. Finally, though the temperature does not have a significant effect in the model, the histogram does show more cookies received higher ratings being baked at 375, so it may be worth baking the cookies at 375 degrees for 12 minutes.   
+
+
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+ggplot(data = cookies, aes(x = Rating, fill = Time )) + 
+  geom_histogram(stat = "count") + 
+  labs(x = "Rating", y = "Number of cookies", title = "Histogram of Rating")+
+  facet_wrap( ~ Temperature, ncol = 2)
+```
+
+
+
+
+

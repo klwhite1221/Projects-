@@ -1,0 +1,84 @@
+---
+title: "MiniProject8"
+author: "Kristina White"
+date: "5/9/2021"
+output: pdf_document
+---
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+library(tidyverse)
+require(gridExtra)
+library(faraway)
+
+```
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+dat <- read_csv("MP8Data.csv")
+```
+
+The goal of this experiment was to answer the question: Do sight and sound affect a person's balance?  This could be relevant to athletes form whom balance and agility are important to their performance or to those who participate in activities such as yoga involve balance skills.  Additionally, this could be a relevant question for people who struggle with balance, causing issues with mobility.  
+
+Each group collected data from four participants in order to have a balanced design. Each participant was randomly assigned to see/hear, not see/hear, see/not hear, or not see/not hear using a random generator.  Each participant was asked to stand in a tree pose.  If they were selected not to see, they were asked to close their eyes.  If selected not to hear, they were asked to put their fingers in their ears. Even if they were selected to hear, they were asked to put their hands on their neck for consistency, since some people extend their arms out to help them balance. The number of seconds the participant was able to maintain the tree pose was measured, with time capped at one minute since some people can balance one foot for extended periods of time. If a participant dropped their foot off their leg, opened their eyes (if assigned not to see), or removed their fingers from their ears or neck, time was stopped.  This experiment was designed with a block on gender because women tend to have a lower center of gravity than men, which can impact balance, so approximately half the groups sought out male participants, and the rest sought out female participants. Each participants height was recorded as a possible covariate since it could affect center of gravity and balance. A diagram of the experimental design is included below. 
+
+
+
+![Experimental Design]("C:/Users/klwhi/OneDrive/Pictures/Saved Pictures/ExperimentalDesign.jpg")
+
+
+
+
+The sight/sound combinations used in this experiment follow a factorial design, so a factorial analysis was used.  First, height was modeled by sight, sound, and their interaction to see if height was correlated with the treatment all of the p-values are insignificant at the 0.05 level, so the height can be used in the model to predict time holding the tree pose.  
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+test_covariate <- lm(Height~Sight*Sound, data = dat)
+anova(test_covariate)
+summary(test_covariate)
+```
+
+
+A model using sight, sound, their interaction, gender, and height was fit.  Height had an insignificant p-value of 0.3892.  Since height is a covariate and not part of the design, it was removed from the model. 
+
+
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+model1 <- lm(Time ~ Sight*Sound + Gender + Height, data = dat)
+anova(model1)
+```
+
+Looking at the model without height, only sight had a significant effect on balance time (p-value 1.019e-07).  Sound was not significant, and their was no interaction effect.  Further, gender was also insignificant.  Looking at the output from Tukey's HSD below confirms this. While there are some significant differences between some sight/sound combinations, overall there is no significant interaction effect, and these differences are between groups with different values for sight, further highlighting sight's significance. 
+
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+model2 <- lm(Time ~ Sight*Sound + Gender, data = dat)
+anova(model2)
+```
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+TukeyHSD(aov(model2))
+```
+
+
+Looking at the interaction plots below confirms the lack of an interaction effect and the significant treatment effect for sight. The histograms show that being able to see tended to yield higher times than not being able to see, but sound does not appear to influence the distribution.  
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+ggplot(data = dat, aes(x = Sight, group = Sound, y = Time, color = Sound)) +
+  stat_summary(fun.y = mean, geom = "point") +
+  stat_summary(fun.y = mean, geom = "line") + 
+  labs(x = "Sight", y = "Time", color = "Sound", title = "Time by Sight and Sound")+
+  facet_wrap( ~ Gender, ncol = 2, labeller = label_both)
+```
+
+
+
+
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+ggplot(data = dat, aes(x = Time, fill = Sight )) + 
+  geom_histogram(binwidth = 5, center = 0) + 
+  labs(x = "Time", y = "Number of People", title = "Histogram of Time Spent in Tree Pose")+
+  facet_wrap( ~ Sound + Gender, ncol = 2, labeller = label_both)
+```
+
+Based on the results, it is reasonable to conclude being able to see has significant positive effect on balance.  However, we are unable to conclude that sound has a significant effect on balance.  Part of this may be due to the way the experiment was conducted.  We did not account for different background noise, and some groups were talking and laughing while people were participating. Also, putting fingers in one's ears is not the best way to block noise.  Additionally, there were athletes whose training may improve their balance among the participants, and this was not accounted for.  Future experiments may find a better way to cancel noise, use a consistent environment, and account for participation in activities such as sports or yoga.  
+
+

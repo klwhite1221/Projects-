@@ -1,0 +1,57 @@
+---
+title: "Mini Project 5"
+author: "Kristina White"
+date: "4/6/2021"
+output: pdf_document
+---
+
+#Mini Project 5 Report
+
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+library(tidyverse)
+dat <- read_csv("MP5.csv")
+dat$`Artist Letter`[69] = "A"
+dat$`Artist Letter`[878] = "E"
+dat <- dat[4:1811, ]
+
+```
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+dat$`Artist Letter` <- as.factor(dat$`Artist Letter`)
+dat$`Picture Number` <- as.factor(dat$`Picture Number`)
+```
+
+
+The purpose of this experiment was to see how perception can affect opinion, and how taking information from secondary sources can be dangerous.
+
+To conduct this experiment the class was split into 10 groups of 5 people.  Each group was assigned a letter and had one artist.  The artist was given 4 words they had to draw. Each of the remaining 4 people in each group was given one of the pictures without seeing the words.  They each had to write down their guess as to what word the image represented on a blank note card.  Each member of the each group (excluding the artists) then had to go out on campus and find a participant to draw the word they had guessed on the other side of the note card.  Once all of the note cards had been collected, the class was shown each of the pictures.  Each person guessed what each image was and recorded whether or not their guess was correct. People did not make guesses for the images from their own group because they may have accidentally seen the words or have become familiar with the artists style.  The guesses were inputed through a Google form. The plot below shows histograms for the number of correct and incorrect guesses (1 is correct, 0 is incorrect) for each picture, grouped by artist. 
+
+
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+ggplot(data = dat, aes(x = `Picture Number`, fill = as.factor(dat$`Correct (1 for yes, 0 for no)`))) + 
+  geom_histogram(stat = "count") + 
+  labs(x = "Picture Number", y = "Correct", title = "Correct by Picture")+
+  facet_wrap( ~ `Artist Letter`, ncol = 5)
+```
+
+This experiment used a nested design. The pictures were nested in the artists.  For example, Picture 1 does not always represent the same picture.  It could be the first picture for artist A, B, C, D, E, F, G, H, I, or J.  The layers in this nested design were Artist Latter and Picture Number.  Both of these are random effects.  The 10 artists were randomly selected to represent all artists, we do not specifically care about those 10.  Additionally, the originally words for the images the artists had to draw were the output of a random generator.  We are not specifically interested in those words/images but in broader the population of possible images. A sketch illustrating the nesting in this experimental design is included below.  The number of guesses per picture likely varies because someone forgot to make a guess for that picture, someone submitted two guesses for that picture, or someone submitted guesses for pictures from their own group.
+
+![Nested Experimental Design]("C:/Users/klwhi/OneDrive/Pictures/Saved Pictures/Design.jpg")
+
+
+
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+model <- lm(dat$`Correct (1 for yes, 0 for no)` ~ dat$`Artist Letter`/dat$`Picture Number`)
+anova(model)
+```
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+Fbatch <- 7.8721/7.1906
+pbatch <- pf(Fbatch,9,30, lower.tail = F)
+pbatch
+```
+After running ANOVA and adjusting the F statistic, we get an insignificant p_value (0.395659) for Artist Letter and a significant p_value (2.2e-16) for Picture Number nested in Artist Letter, using $\alpha = 0.05$ .  It is not surprising that Artist Letter is not significant because of the two-channel nature of this experiment.  If the person to see the original artist's image guessed wrong, it is unlikely the image drawn by the random participant would allow the class to guess the original word/image correctly.  However, Picture Number nested in Artist Letter is still significant because if the word is easy, people are likely to guess the word correctly despite the two-channel nature of the experiment.  
+
+
