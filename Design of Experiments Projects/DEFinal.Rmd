@@ -1,0 +1,259 @@
+---
+title: "The Effect of Music on Memory"
+author: "Kelsie Muha and Kristina White"
+date: "5/18/2021"
+output: pdf_document
+---
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+library(tidyverse)
+Music <- read_csv("Music.csv")
+fac <- read_csv("Factorial.csv")
+Music$Group2 <- Music$Group
+for(i in 1:length(Music$Group2)){
+  if(Music$Group2[i] == "PL"){
+    Music$Group2[i] = "Pop/Low"
+  }else if(Music$Group2[i] == "PH"){
+    Music$Group2[i] = "Pop/High"
+  }else if(Music$Group2[i] == "CL"){
+    Music$Group2[i] = "Classical/Low"
+  }else if(Music$Group2[i] == "CH"){
+    Music$Group2[i] = "Classical/High"
+  }else{
+    Music$Group2[i] = "None"
+  }
+}
+```
+
+1. Introduction
+
+The average person spends approximately 2.6 hours a day listening to music, equating to about 52 songs, and 54% of people say they “love” or are “fanatical” about music (International Federation of the Phonographic Industry [IFPI], 2019, p. P07). Evidently, music constitutes a large part of our daily lives and will likely remain a large part as technology continues to advance. Due to its prominence in our lives, it is reasonable to assume that music also affects the activities we perform while listening to it. Specifically, we were interested in determining whether listening to music has an effect on retaining information. 
+
+Extensive literature exists outlining research related to the relationship between music and activity performance. Chandrasekaran and Kraus (2010) argued that music can improve speech perception in children with language-based learning disorders, indicating that music has a positive effect on task performance (p. 297). Similarly, Lim and Bang (2018) concluded that listening to music while engaging in academic tasks increased task performance in online students (p. 33). Young and Nolan (2015) supported these results when completing a mindless task, such as painting or stocking shelves (p. 13). However, they determined that tasks requiring more focus, such as reading and analyzing data, should not be executed while listening to music as it appeared to have a negative effect on their performance (Young & Nolan, 2015). 
+
+In this study, we explored these differing opinions on music listening and task performance by exploring the effect that music has on retaining information. Specifically, we were interested in determining whether listening to music improved assessment scores when students were required to retain specific information.  This is relevant in education as many students listen to music of varying types while studying, taking notes, and completing assignments.  We examined the effect of volume level and music genre on the retention of information, specifically considering music at low and high volume levels and in either the classical or pop genres. 
+
+
+2. Methods
+
+To answer this research question, a completely randomized experiment was conducted.  The data was collected by the authors of this paper. To conduct the experiment, participants were asked to read a short passage while one of the music treatments was applied to them. There were five total treatments that included a control group with no music, pop music with low volume, pop music with high volume, classical music with low volume, and classical music with high volume. Then, participants completed an assessment to test how much information they retained from the passage. 
+
+Notre Dame students, both undergraduate and graduate, on campus were asked to voluntarily participate in the experiment. A fixed total of 30 students participated and were randomly split into five groups of six students each. Splitting the design into five equal groups allowed for a balanced design to be performed. Therefore, there were five total treatments and each treatment was performed on six different students. Since there were five treatment groups with six students in each group, the passage was read 30 times in total. 
+Starting with the control group, a random number generator was used to assign the first spot in the control group a random number between 1 and 30. Random numbers between 1 and 30 were then assigned to the other five spots within the control group. Then, the same process was repeated for each of the other four treatment groups, with no number ever repeating itself. The results of this random number generation are included in an Excel spreadsheet in Appendix A.
+
+Each of the students was then assigned a number between 1 and 30 in the order that they arrived to participate in the experiment. The students were then assigned the treatment that corresponded to their number. For example, the first student to participate in the experiment was assigned the number 1. The number 1 had also been randomly assigned to the pop low volume group using the method described above. Therefore, this participant was assigned to the pop low volume treatment group.
+After the treatment was assigned, each participant read a short passage provided to them on a sheet of paper. Every participant received the same passage that provided information on different types of energy. This passage was chosen because it was a good level of difficulty and it also provided many facts that could be assessed later in the experiment. The passage assigned to the participants is included in Appendix B. While reading the passage, the assigned music genre was played in the background at the assigned volume level. 
+
+All students assigned to the same genre heard the same music selection. For the pop music group, “Cruel Summer” by Taylor Swift was played. For the classical music group, “Canon in D” by J. Pachelbel was played. The music was played for the participants on the authors’ iPhones in a quiet room. Due to COVID-19 restrictions, headphones could not be provided and shared by the 30 different participants throughout the experiment. Therefore, the music was played out loud for the participants. For the high volume groups, the iPhone’s volume was turned all the way up to its maximum volume. For the low volume groups, the music was played at a quarter of the full volume of the iPhone.
+
+Each student was allowed three minutes to read and study the passage, but they were allowed to finish early if desired. After completing the passage, each student was asked to complete a 10-question multiple-choice quiz to assess how well they retained the provided information. The link to the quiz was sent to each student’s Notre Dame email and completed on their own device with one of the authors present. Every student received the same quiz, completed via Google form, and their score was recorded on an Excel spreadsheet. The quiz is included in Appendix C. 
+
+The student’s gender, school year, and whether they normally listen to music while studying were also recorded on the quiz. This information was collected to determine if there were possible covariates in the experiment. These possible covariates may have an influence on memory, reading comprehension, and assessment-taking skills.  Additionally, someone who listens to music often while studying may respond differently to hearing music while reading than someone who never listens to music while studying. A data analysis was then performed on the assessment scores. 
+
+
+3. Data Analysis 
+
+After collecting the data, an analysis was performed to determine if listening to music had an effect on retaining information. Our experiment was structured as a completely randomized design with a control group where the participants did not listen to any music while reading the passage. While our data are random and independent, the sample size is small and the data is not quite normally distributed with equal variance. Attempts to correct this through transformations were not successful.  An analysis was performed using each of the treatment groups to predict a participant’s score on the assessment. However, since the participants who were not in the control group were assigned genre/volume combinations, we performed a factorial analysis using genre and volume as the levels. This analysis excluded the control groups. There were a total of 30 participants in this experiment, with 6 people in each treatment group.   
+
+First, a linear model with treatment group as the predictor and assessment score as the response was fit.  An analysis of variance (ANOVA) procedure was performed on this model and returned a p-value of 0.2028, which is insignificant at the $alpha$=0.05 level.  This is unsurprising given the overlap in the boxplots for each treatment group, shown in Figure 1 below.
+
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+ggplot(data = Music, aes(x = Group2, y = Score, fill = Group)) + 
+  geom_boxplot() + 
+  scale_fill_brewer(palette="PuRd")+
+  labs(x = "Treatment Group", y = "Assessment Score", title = "Assessment Score by Treatment Group", caption = "Figure 1: Boxplots for each treatment group ")+
+  theme(legend.position = "none")+
+  theme(axis.text.x=element_text(angle = 45))
+
+```
+
+
+Next, a factorial analysis was performed using genre and volume as factors.  The levels for genre were classical and pop, and the levels for volume were high and low.  Genre was found to have a significant effect on assessment score (p-value of 0.04289), but volume was not found to be significant.  There was also no evidence of an interaction effect, since the interaction term has a p-value of 1.  We can see this in the interaction plot below.   The plot also shows participants who listened to classical music received higher assessment scores than those who listened to pop music.  Using Tukey’s HSD confirms listening to pop music has a significant negative effect on assessment score compared to classical music.  Additionally, none of the covariates (gender, year, and how often the participant listened to music while studying) were found to be significant in the model for the factorial analysis or the analysis of the treatment groups.   
+
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+
+ggplot(data = fac, aes(x = Genre, group = Volume, y = Score, color = Volume)) +
+  stat_summary(fun = mean, geom = "point") +
+  stat_summary(fun = mean, geom = "line") + 
+  labs(x = "Genre", y = "Assessment Score", color = "Volume", title = "Assessment Score by Genre and Volume", caption = "Figure 2: Interaction Plot for Genre and Volume") +
+  scale_color_manual(values = c("blue3", "darkviolet"),
+                     breaks = c("High", "Low"),
+                     labels = c("High", "Low"))
+
+```
+
+
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+ggplot(data = fac, aes(x = Genre, y = Score, fill = Genre)) + 
+  geom_boxplot() + 
+  labs(x = "Music Genre", y = "Assessment Score", title = "Assessment Score by Music Genre", caption = "Figure 3: Boxplot for assessment scores by music genre")+
+  theme(legend.position = "none")
+  
+```
+
+
+Figure 3 illustrates these differences in assessment score by genre.  It shows the classical genre resulted in higher assessment scores than both the pop genre.  Figure 3 also highlights how the pop genre resulted in lower assessment scores than the classical genre. Overall, our analysis indicated that there exists a relationship between music genre and assessment scores.
+
+
+4. Discussion and Conclusion
+
+Based on the above analysis, the volume level of the music did not have a statistically significant effect on the assessment scores. The music genre, however, appeared to be a significant predictor in determining assessment scores.   Additionally, the analysis also indicated that there was not an interaction between the different music genres and the different volume levels. These conclusions confirm part of the initial hypothesis as the music genre had an effect on the assessment scores. However, the volume level did not affect the assessment scores and there was not an interaction effect between volume level and music, as was hypothesized.
+
+Further analysis of the classical and pop music genres indicated that each genre had a different effect on the assessment scores. Specifically, the classical music genre resulted in higher assessment scores than the pop genre. This is likely because participants were able to focus more with classical music playing in the background which caused the higher assessment scores. Classical music is typically calming and soothing, which could help reduce stress related to the task being performed, resulting in better task performance. Its lack of lyrics may also allow people to focus more on the task at hand.  This conclusion agrees with Lim and Bang (2018), who argued that listening to music while performing academic tasks can increase task performance.
+
+In contrast to the classical music genre, the pop music resulted in lower assessment scores.  Pop music can be quite distracting due to the lyrics and upbeat tone usually associated with the genre. The lyrics, especially, can cause people to focus more on the words of the song than the task they are trying to perform. This can be particularly true if the participant can relate to the lyrics of the song, such as a breakup song or a love song. Therefore, it was concluded that music with lyrics likely resulted in lower task performance due to its distracting nature.  This supports Young and Nolan’s (2015) conclusion that listening to music while reading can have a negative effect on performance.   
+
+Although the above results provided statistically significant evidence, there were some limitations that may have affected the analysis. Due to COVID-19 restrictions, headphones were not able to be provided to the participants. Therefore, the music was played out loud for the participants, which may have been affected by other outside noise present in the environment. Also, the chosen passage was related to science, so participants majoring in the College of Science may have had a natural advantage when taking the quiz, thus our data could have been biased. Further, the sample size was small, which may have affected the significance of the results. Since the data was non-normal, it is possible that ANOVA yielded a larger type I error, meaning the music genre may be less significant than the analysis shows.  With these limitations in mind, however, it was still determined that the music genre had a significant effect on task performance but the volume of the music did not have an effect on retaining the provided information.  In the future, this experiment could be redone with larger sample sizes and headphones to reduce the influence of background noise.  
+
+
+
+Appendix A. The results of the random number generation for the treatment groups:
+
+
+![Randomization]("C:/Users/klwhi/OneDrive/Pictures/Saved Pictures/random.jpg")
+
+
+
+Appendix B. The passage assigned to the participants:
+
+“Energy is most simply understood as the ability to do work. All living things use energy to maintain life, grow, change, and move. We use energy to prepare meals, to travel in a car, and to brush our teeth.
+
+There are many different kinds of energy. Chemical energy is found in the interaction of atoms and molecules. This is the kind of energy that our body makes from the food that we eat. Electrical energy is caused by the movement of electrons. Gravitational energy is found between extremely large objects like planets and the sun. Heat energy, also called thermal energy, occurs when molecules at different temperatures interact. Radiant energy comes from light, in particular the light of the sun. You are probably already familiar with radiant energy as solar energy! Kinetic energy is the energy of anything that is moving. Kinetic means relating to or resulting in motion. Nuclear energy is generated from splitting atoms. Finally, when energy is stored, it is called potential energy. Something that is sitting on a high shelf has potential energy; when it falls, it will have kinetic energy.
+
+In physics, there is a single standard unit for measuring energy called the joule (J). Around the world, there are also different units for measuring energy, like kilowatt- hours, calories, and foot-pounds.
+
+One of the basic laws of science is called the Law of Conservation of Energy. It says that energy cannot be created or destroyed, it can only be changed from one form into another or transferred from one object to another. For example, solar panels on a home turn radiant energy into electrical energy that can be used to power home appliances.
+Energy can also be either renewable or non-renewable. Renewable energy comes from a source that never runs out, like the sun or the wind. Non-renewable energy comes from a source that will run out one day, like the coal we burn to create electricity.”
+
+
+Appendix C. The quiz assigned to the participants:
+
+1. What type of energy comes from light, particularly the sun?
+
+  -Radiant energy
+  
+  -Heat energy
+  
+  -Nuclear energy
+  
+  -Gravitational energy
+  
+2. What is the single standard unit for measuring energy?
+
+  -Kilocalorie (kCal)
+  
+  -Newton (N)
+  
+  -Kiolwatt (kW)
+  
+  -Joule (J)
+  
+3. What type of energy is generdated from splitting atoms?
+
+  -Heat energy
+  
+  -Potential energy
+  
+  -Nuclear energy
+  
+  -Electrical energy
+  
+4. Energy can be created or destroyed.
+
+  -True
+  
+  -False
+  
+5. Something sitting on a high shelf has what kind of energy?
+
+  -Chemical energy
+  
+  -Gravitational energy
+  
+  -Kinetic energy
+  
+  -Potential energy
+  
+6. What type of energy is found between extremely large objects?
+
+  -Gravitational energy
+  
+  -Potential energy
+  
+  -Radiant energy
+  
+  -Kinetic enegy
+  
+7. Energy is the ability to do work.
+
+  -True
+  
+  -False
+  
+8. What type fo energy does our body make from the food we eat?
+
+  -Chemical energy
+  
+  -Radiant energy
+  
+  -Kinetic energy
+  
+  -Heat energy
+  
+9. What is an example of a non-renewable energy source?
+
+  -Sun
+  
+  -Coal
+  
+  -Wind
+  
+  -Ethanol
+  
+10. Solar panels turn radiant energy into ___________ energy that can be used to power home appliances.
+
+  -Solar
+  
+  -Electrical
+  
+  -Heat
+  
+  -Nuclear
+  
+
+References
+
+
+Chandrasekaran, B., & Kraus, N. (2010). Music, Noise-Exclusion, and Learning. Music
+
+  Perception: An Interdisciplinary Journal, 27(4), 297–306.
+
+  https://doi.org/10.1525/mp.2010.27.4.297
+
+International Federation of the Phonographic Industry. (2019). Music Listening 2019: A 
+
+  look at how recorded music is enjoyed around the world. Retrieved from
+
+  https://www.ifpi.org/wp-content/uploads/2020/07/Music-Listening-2019-1.pdf
+
+Lim, H., & Bang, E.-J. (2018). The Effects of Music Listening on Affect, Self-efficacy,   
+
+  Mental Exertion, and Task Performance of Online Learners. Journal of the Scholarship 
+    
+  of Teaching and Learning for Christians in Higher Education, 8(1), 13–37.
+    
+  https://doi.org/10.31380/sotlched.8.1.13
+
+Young, E., & Nolan, J. (2015). Effects of Music Genre on Simple and Simulated Task
+
+  Switching. International Social Science Review (Online), 91(2), 0_1–19.
+
+  http://search.proquest.com/docview/1788574917/
+
+
+
+
+
